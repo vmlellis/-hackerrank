@@ -9,21 +9,24 @@ The Node class is defined as follows:
 */
 
     boolean checkNode(Node node) {
-        //System.out.println(node.data);
+        int r_min = 0, l_max = 0;
         if (node.left != null) {
             if (node.left.data >= node.data) return false;
+            l_max = getMax(node.left);
+            if (l_max >= node.data) return false;
             if (!checkNode(node.left)) return false;
-            if (getMax(node.left) >= node.data) return false;
         }
 
         if (node.right != null) {
             if (node.right.data <= node.data) return false;
+            r_min = getMin(node.right);
+            if (r_min <= node.data) return false;
             if (!checkNode(node.right)) return false;
-            if (getMin(node.right) <= node.data) return false;
         }
 
         if (node.left != null && node.right != null) {
-            if (getMax(node.left) >= getMin(node.right)) return false;
+            if (node.left.data >= node.right.data) return false;
+            if (l_max >= r_min) return false;
         }
 
         return true;
@@ -40,12 +43,14 @@ The Node class is defined as follows:
     Integer getMax(Node node, Integer v) {
         if (node.left != null) {
             if (node.left.data > v) v = node.left.data;
-            v = getMax(node.left, v);
+            int n = getMax(node.left, v);
+            if (n > v) v = n;
         }
 
         if (node.right != null) {
             if (node.right.data > v) v = node.right.data;
-            v = getMax(node.right, v);
+            int n = getMax(node.right, v);
+            if (n > v) v = n;
         }
         return v;
     }
@@ -53,18 +58,19 @@ The Node class is defined as follows:
     Integer getMin(Node node, Integer v) {
         if (node.left != null) {
             if (node.left.data < v) v = node.left.data;
-            v = getMax(node.left, v);
+            int n = getMin(node.left, v);
+            if (n < v) v = n;
         }
 
         if (node.right != null) {
             if (node.right.data < v) v = node.right.data;
-            v = getMax(node.right, v);
+            int n = getMin(node.right, v);
+            if (n < v) v = n;
         }
         return v;
     }
 
     boolean checkBST(Node root) {
         if (root == null) return false;
-        // System.out.println(root.data);
         return checkNode(root);
     }

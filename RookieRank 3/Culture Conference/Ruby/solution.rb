@@ -1,26 +1,24 @@
 #!/bin/ruby
 
-# SLOW AND WRONG TO SOME TEST CASES
+# SLOW SOLUTION
 
 def getMinimumEmployees(e)
   burnouts = []
-  arr = Array.new(e.size) { [] }
+  arr = Array.new(e.size + 1) { [] }
   e.each_with_index do |v, i|
     supervisor = v[0]
     burnout = v[1]
     if burnout == 0
       burnouts << i + 1
-      arr[i] << i + 1
-      if supervisor > 0
-        arr[supervisor - 1] << i + 1 unless arr[supervisor - 1].include?(i + 1)
-      end
+      arr[i + 1] << i + 1
+      arr[supervisor] << i + 1 unless arr[supervisor].include?(i + 1)
     end
     if supervisor > 0 && e[supervisor - 1][1] == 0
-      arr[i] << supervisor
+      arr[i + 1] << supervisor
     end
   end
-  # p burnouts
-  # p arr
+  p burnouts
+  p arr
   arr.sort_by! { |x| x.size }
   res = 0
   while connections = arr.pop
@@ -38,7 +36,7 @@ def getMinimumEmployees(e)
         diff = a - burnouts
         diff.each { |v| a.delete(v) }
       end
-      arr.sort_by! { |x| x.size }
+      arr.select { |x| !x.empty? }.sort_by! { |x| x.size }
     end
   end
   res
